@@ -1,92 +1,53 @@
-import React, { Component } from 'react'
-import SimpleStorageContract from '../build/contracts/SimpleStorage.json'
-import getWeb3 from './utils/getWeb3'
+import React, { Component } from "react";
+import getWeb3 from "./util/getWeb3";
+import { userAddress, web3 } from "./util/context";
 
-import './css/oswald.css'
-import './css/open-sans.css'
-import './css/pure-min.css'
-import './App.css'
+
+// Styles
+import "./css/oswald.css"
+import "./css/open-sans.css"
+import "./css/pure-min.css"
+// import "./css/App.css"
 
 class App extends Component {
   constructor(props) {
-    super(props)
-
+    super(props);
     this.state = {
-      storageValue: 0,
+      userAddress: undefined,
       web3: null
-    }
+    };
+    this.setup();
   }
 
-  componentWillMount() {
-    // Get network provider and web3 instance.
-    // See utils/getWeb3 for more info.
-
-    getWeb3
-    .then(results => {
+  async setup() {
+    const web3 = await getWeb3;
+    web3.eth.getAccounts((error, accounts) => {
+      const userAddress = accounts[0] || null;
       this.setState({
-        web3: results.web3
-      })
-
-      // Instantiate contract once web3 provided.
-      this.instantiateContract()
-    })
-    .catch(() => {
-      console.log('Error finding web3.')
-    })
+        userAddress: userAddress,
+        web3: web3
+      });
+    });
   }
 
-  instantiateContract() {
-    /*
-     * SMART CONTRACT EXAMPLE
-     *
-     * Normally these functions would be called in the context of a
-     * state management library, but for convenience I've placed them here.
-     */
+  receiveUser() {
+    debugger
+  }
 
-    const contract = require('truffle-contract')
-    const simpleStorage = contract(SimpleStorageContract)
-    simpleStorage.setProvider(this.state.web3.currentProvider)
-
-    // Declaring this for later so we can chain functions on SimpleStorage.
-    var simpleStorageInstance
-
-    // Get accounts.
-    this.state.web3.eth.getAccounts((error, accounts) => {
-      simpleStorage.deployed().then((instance) => {
-        simpleStorageInstance = instance
-
-        // Stores a given value, 5 by default.
-        return simpleStorageInstance.set(5, {from: accounts[0]})
-      }).then((result) => {
-        // Get the value from the contract to prove it worked.
-        return simpleStorageInstance.get.call(accounts[0])
-      }).then((result) => {
-        // Update state with the result.
-        return this.setState({ storageValue: result.c[0] })
-      })
-    })
+  loading() {
+    return !this.state.userAddress || !this.state.web3
   }
 
   render() {
-    return (
-      <div className="App">
-        <nav className="navbar pure-menu pure-menu-horizontal">
-            <a href="#" className="pure-menu-heading pure-menu-link">Truffle Box</a>
-        </nav>
-
-        <main className="container">
-          <div className="pure-g">
-            <div className="pure-u-1-1">
-              <h1>Good to Go!</h1>
-              <p>Your Truffle Box is installed and ready.</p>
-              <h2>Smart Contract Example</h2>
-              <p>If your contracts compiled and migrated successfully, below will show a stored value of 5 (by default).</p>
-              <p>Try changing the value stored on <strong>line 59</strong> of App.js.</p>
-              <p>The stored value is: {this.state.storageValue}</p>
-            </div>
+    return(
+      <web3.Provider value={this.state.web3}>
+        <userAddress.Provider value={this.state.userAddress}>
+          <div className="App">
+            {/*{this.loading() ? "Loading" : this.props.children}*/}
+            {this.loading() ? "Loading" : "Not Loading"}
           </div>
-        </main>
-      </div>
+        </userAddress.Provider>
+      </web3.Provider>
     );
   }
 }

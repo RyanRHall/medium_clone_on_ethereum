@@ -1,13 +1,17 @@
 import React, { Component } from "react";
+import { browserHistory } from "react-router";
+import { bindAll } from "lodash";
+import connectToContract from "./connect_to_contract";
 
 class NewArticle extends Component {
   constructor(props) {
     super(props);
+    bindAll(this, ["handleSubmit", "redirectToNewArticle"]);
     this.state = {
       title: "",
       body: ""
     }
-    props.connectContract("Medium");
+    props.connectContract("Medium", { watch: { posted: this.redirectToNewArticle } });
   }
 
   handleChange(property) {
@@ -16,17 +20,21 @@ class NewArticle extends Component {
     }
   }
 
-  handleSubmit(){
-    this.props.contracts.Medium.post(this.state.title, this.state.body);
+  async handleSubmit() {
+    const newArticleId = await this.props.contracts.Medium.post(this.state.title, this.state.body, { from: this.props.userAddress, gas: 300000 });
+  }
+
+  redirectToNewArticle(id) {
+    browserHistory.push(`/articles/${id}`);
   }
 
   render() {
     return(
       <main>
         <h1>New Article</h1>
-        <lable>Title</lable>
+        <label>Title</label>
         <input onChange={this.handleChange("title")} />
-        <lable>Body</lable>
+        <label>Body</label>
         <textarea onChange={this.handleChange("body")} />
         <button onClick={this.handleSubmit}>Create Article</button>
       </main>
@@ -34,4 +42,4 @@ class NewArticle extends Component {
   }
 }
 
-export default NewArticle;
+export default connectToContract(NewArticle);

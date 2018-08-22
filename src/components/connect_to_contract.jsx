@@ -5,12 +5,6 @@ import { userAddress, web3 } from "../util/context";
 import { camelCase, tryTo } from "../util/functions";
 import { bindAll, omit } from "lodash";
 
-const SPECIAL_EVENTS = [
-  "contractReady",
-  "userReady",
-  "userAndContractReady"
-];
-
 class ContractComponent extends Component {
   constructor(props) {
     super(props);
@@ -51,6 +45,13 @@ class ContractComponent extends Component {
     componentContractClass.setProvider(this.props.web3.currentProvider);
     // load contract by address or deployment
     const componentContract = contractProperties.address ? await componentContractClass.at(contractProperties.address) : await componentContractClass.deployed();
+    // set event listeners
+    for (let eventName in contractProperties.watch) {
+      if (contractProperties.watch.hasOwnProperty(eventName)) {
+        debugger
+        this.state.contract[eventName]().watch(contractProperties.watch[eventName]);
+      }
+    }
     // set component's state with contract
     await this.setState({
       contracts: Object.assign({}, this.state.contracts, { [contractName]: componentContract })

@@ -7,12 +7,14 @@ contract Medium {
   uint[] public articleIds;
   uint nextId = 0;
 
-  function post(string title, string body) public returns(address) {
+  event posted(uint articleId)
+
+  function post(string title, string body) public {
     address newArticle = new Article(title, body, nextId);
     articleAddresses[nextId] = address(newArticle);
+    emit posted(nextId);
     articleIds.push(nextId);
     nextId++;
-    return(newArticle);
   }
 
   function getArticleIds() view returns(uint[]) {

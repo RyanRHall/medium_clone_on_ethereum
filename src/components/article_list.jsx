@@ -7,10 +7,10 @@ import { bindAll } from "lodash";
 class ArticleList extends Component {
   constructor(props) {
     super(props);
-    bindAll(this, ["getArticleList"])
+    bindAll(this, ["getArticleList"]);
     this.state = {
       articleAddresses: []
-    }
+    };
     props.connectContract("Medium", { ready: this.getArticleList });
   }
 

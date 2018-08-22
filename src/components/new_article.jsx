@@ -7,6 +7,7 @@ class NewArticle extends Component {
       title: "",
       body: ""
     }
+    props.connectContract("Medium");
   }
 
   handleChange(property) {
@@ -16,7 +17,7 @@ class NewArticle extends Component {
   }
 
   handleSubmit(){
-
+    this.props.contracts.Medium.post(this.state.title, this.state.body);
   }
 
   render() {

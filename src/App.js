@@ -43,8 +43,7 @@ class App extends Component {
       <web3.Provider value={this.state.web3}>
         <userAddress.Provider value={this.state.userAddress}>
           <div className="App">
-            {/*{this.loading() ? "Loading" : this.props.children}*/}
-            {this.loading() ? "Loading" : "Not Loading"}
+            {this.loading() ? "Loading" : this.props.children}
           </div>
         </userAddress.Provider>
       </web3.Provider>

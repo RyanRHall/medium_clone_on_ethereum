@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { browserHistory } from "react-router";
-import Article from "./article";
+import ArticleListItem from "./article_list_item";
 import connectToContract from "./connect_to_contract";
 import { bindAll } from "lodash";
 
@@ -12,35 +11,24 @@ class ArticleList extends Component {
     this.state = {
       articleAddresses: []
     }
-    props.setContractProperties({
-      name: "Medium"
-    })
-    props.setEventListeners({
-      userAndContractReady: this.getArticleList
-    })
+    props.connectContract("Medium", { ready: this.getArticleList });
   }
 
   async getArticleList() {
-    const articleIds = this.contract.getArticleIds();
-    debugger
+    let articleIds = await this.props.contracts.Medium.getArticleIds();
+    articleIds = articleIds.map(bigNumber => bigNumber.c[0]);
+    const articleAddresses = await Promise.all(articleIds.map(id => this.props.contracts.Medium.articleAddresses(id)))
+    this.setState({ articleAddresses });
   }
 
   render() {
     return(
       <main>
         <h1>Medium</h1>
-        {this.state.articleAddresses.map(address => <Article key={address} address={address} />)}
+        {this.state.articleAddresses.map(address => <ArticleListItem key={address} address={address} />)}
       </main>
     )
   }
 }
-
-const mapStateToProps = state => {
-  return {}
-  // accounts: state.accounts,
-  // mediumInitialized: state.contracts.Medium.initialized,
-}
-
-
 
 export default connectToContract(ArticleList);

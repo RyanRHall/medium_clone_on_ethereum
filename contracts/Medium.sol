@@ -7,7 +7,7 @@ contract Medium {
   uint[] public articleIds;
   uint nextId = 0;
 
-  event posted(uint articleId)
+  event posted(uint articleId);
 
   function post(string title, string body) public {
     address newArticle = new Article(title, body, nextId);

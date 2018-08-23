@@ -10,21 +10,22 @@ class NewArticle extends Component {
     this.state = {
       title: "",
       body: ""
-    }
+    };
     props.connectContract("Medium", { watch: { posted: this.redirectToNewArticle } });
   }
 
   handleChange(property) {
     return event => {
-      this.setState({ [property]: event.target.value })
+      this.setState({ [property]: event.target.value });
     }
   }
 
-  async handleSubmit() {
-    const newArticleId = await this.props.contracts.Medium.post(this.state.title, this.state.body, { from: this.props.userAddress, gas: 300000 });
+  handleSubmit() {
+    this.props.contracts.Medium.post(this.state.title, this.state.body, { from: this.props.userAddress });
   }
 
-  redirectToNewArticle(id) {
+  redirectToNewArticle(_, properties) {
+    const id = properties.args.articleId.c[0];
     browserHistory.push(`/articles/${id}`);
   }
 

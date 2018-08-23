@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import { Connect, SimpleSigner } from "uport-connect";
-import { connect } from "react-redux";
 import { browserHistory } from "react-router";
-import { receiveUser } from "../action_creators/user_actions";
 
 // CONSTANTS
 const mnidAddress = '2oiFZa3ps2yNHZZkukXer56aJHjRRbyBTFK';
@@ -35,16 +33,3 @@ class LogIn extends Component {
     )
   }
 }
-
-// CONTAINER
-const mapStateToProps = state => ({
-  thing: "yo"
-});
-const mapDispatchToProps = dispatch => ({
-  receiveUser: user => dispatch(receiveUser(user))
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(LogIn);

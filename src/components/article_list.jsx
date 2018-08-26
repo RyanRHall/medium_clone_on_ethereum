@@ -16,7 +16,7 @@ class ArticleList extends Component {
 
   async getArticleList() {
     let articleIds = await this.props.contracts.Medium.getArticleIds();
-    articleIds = articleIds.map(bigNumber => bigNumber.c[0]);
+    articleIds = articleIds.map(bigNumber => bigNumber.toNumber());
     const articleAddresses = await Promise.all(articleIds.map(id => this.props.contracts.Medium.articleAddresses(id)))
     this.setState({ articleAddresses });
   }

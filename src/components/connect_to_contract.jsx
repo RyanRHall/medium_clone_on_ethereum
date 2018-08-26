@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 // import PropTypes from "prop-types";
 import contract from "truffle-contract";
-import { userAddress, web3, userProfile, withUserAddress, withWeb3, withUserProfile, } from "../util/context";
-import { camelCase, tryTo } from "../util/functions";
+import { userAddress, userProfile } from "../util/context";
+import { tryTo } from "../util/functions";
 import { bindAll, omit } from "lodash";
 
 class ContractComponent extends Component {
@@ -17,13 +17,12 @@ class ContractComponent extends Component {
 
   // Connect Contract
   async connectContract(contractName, contractProperties={}) {
-    if(!this.props.web3) { return; }
     // find contract file
     const fileName = contractProperties.fileName || contractName;
     const json = require(`../../build/contracts/${fileName}.json`);
     // create contact object
     const componentContractClass = contract(json);
-    componentContractClass.setProvider(this.props.web3.currentProvider);
+    componentContractClass.setProvider(window.web3.currentProvider);
     // load contract by address or deployment
     const componentContract = contractProperties.address ? await componentContractClass.at(contractProperties.address) : await componentContractClass.deployed();
     // set event listeners
@@ -57,24 +56,19 @@ class ContractComponent extends Component {
 
 const connectToContract = Component => props => {
   return (
-    <web3.Consumer>
+    <userAddress.Consumer>
       {
-        web3 =>
-          <userAddress.Consumer>
+        userAddress =>
+          <userProfile.Consumer>
             {
-              userAddress =>
-                <userProfile.Consumer>
-                  {
-                    userProfile =>
-                      <ContractComponent {...props} userAddress={userAddress} web3={web3} userProfile={userProfile}>
-                        <Component/>
-                      </ContractComponent>
-                  }
-                </userProfile.Consumer>
+              userProfile =>
+                <ContractComponent {...props} userAddress={userAddress} userProfile={userProfile}>
+                  <Component/>
+                </ContractComponent>
             }
-          </userAddress.Consumer>
+          </userProfile.Consumer>
       }
-    </web3.Consumer>
+    </userAddress.Consumer>
   );
 }
 

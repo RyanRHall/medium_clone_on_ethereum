@@ -6,7 +6,7 @@ import { Router, Route, IndexRoute, browserHistory } from "react-router";
 import LogIn from "./components/log_in"
 import ArticleList from "./components/article_list"
 import Article from "./components/article"
-import NewArticle from "./components/new_article"
+import EditArticle from "./components/edit_article"
 
 
 ReactDOM.render(
@@ -14,7 +14,8 @@ ReactDOM.render(
     <Router history={browserHistory}>
       <Route path="/" component={App}>
         <Route path="login" component={LogIn} />
-        <Route path="articles/new" component={NewArticle} />
+        <Route path="articles/new" component={EditArticle} />
+        <Route path="articles/:id/edit" component={EditArticle} />
         <Route path="articles/:id" component={Article} />
         <IndexRoute component={ArticleList} />
       </Route>

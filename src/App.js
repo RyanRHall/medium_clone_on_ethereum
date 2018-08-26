@@ -1,30 +1,36 @@
 import React, { Component } from "react";
 import getWeb3 from "./util/getWeb3";
-import { userAddress, web3, userProfile } from "./util/context";
-
+import { userAddress, userProfile } from "./util/context";
+import { bindAll } from "lodash";
+import Header from "./components/header"
 
 // Styles
 import "./css/oswald.css"
 import "./css/open-sans.css"
 import "./css/pure-min.css"
 
+const defaultUserProfileState = {
+  name: null,
+  avatar: null,
+  email: null
+};
+
 class App extends Component {
   constructor(props) {
     super(props);
+    bindAll(this, ["logOut", "receiveUser"])
     this.state = {
       userAddress: undefined,
       web3: null,
-      userProfile: {
-        firstName: null,
-        lastName: null,
-        email: null
-      }
+      userProfile: defaultUserProfileState
     };
     this.setup();
   }
 
   async setup() {
+    // get web3
     const web3 = await getWeb3;
+    // get eth account
     web3.eth.getAccounts((error, accounts) => {
       const userAddress = accounts[0] || null;
       this.setState({
@@ -32,10 +38,29 @@ class App extends Component {
         web3: web3
       });
     });
+    // get signed in user
+    const userProfile = JSON.parse(sessionStorage.getItem("userProfile"));
+    if(userProfile) {
+      this.setState({ userProfile });
+    }
   }
 
-  receiveUser() {
-    debugger
+  logOut() {
+    this.setState({ userProfile: defaultUserProfileState});
+    sessionStorage.removeItem("userProfile");
+  }
+
+  receiveUser(userProfile) {
+    this.setState({ userProfile });
+    sessionStorage.setItem("userProfile", JSON.stringify(userProfile));
+  }
+
+  profileContext() {
+    return {
+      ...this.state.userProfile,
+      receiveUser: this.receiveUser,
+      logOut: this.logOut
+    }
   }
 
   loading() {
@@ -44,15 +69,14 @@ class App extends Component {
 
   render() {
     return(
-      <web3.Provider value={this.state.web3}>
-        <userAddress.Provider value={this.state.userAddress}>
-          <userProfile.Provider value={this.state.userProfile}>
-            <div className="App">
-              {this.loading() ? "Loading" : this.props.children}
-            </div>
-          </userProfile.Provider>
-        </userAddress.Provider>
-      </web3.Provider>
+      <userAddress.Provider value={this.state.userAddress}>
+        <userProfile.Provider value={this.profileContext()}>
+          <div className="App">
+            <Header />
+            {this.loading() ? "Loading" : this.props.children}
+          </div>
+        </userProfile.Provider>
+      </userAddress.Provider>
     );
   }
 }

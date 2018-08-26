@@ -8,7 +8,8 @@ class Article extends Component {
     super(props);
     bindAll(this, ["getArticleProperties", "handleClick"])
     this.state = {
-      title: "...",
+      title: null,
+      points: null,
       id: null
     };
     props.connectContract("Article", { address: props.address, ready: this.getArticleProperties })
@@ -17,7 +18,8 @@ class Article extends Component {
   async getArticleProperties() {
     const title = await this.props.contracts.Article.title();
     const id = await this.props.contracts.Article.id();
-    this.setState({ title, id })
+    const points = (await this.props.contracts.Article.points()).toNumber();
+    this.setState({ title, id, points })
   }
 
   handleClick() {
@@ -28,7 +30,8 @@ class Article extends Component {
   render() {
     return(
       <div className="article-list-item" onClick={this.handleClick}>
-        {this.state.title}
+        <span>{this.state.points}</span>
+        <span>{this.state.title}</span>
       </div>
     )
   }

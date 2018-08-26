@@ -1,12 +1,11 @@
-var Medium = artifacts.require("Medium");
+const Medium = artifacts.require("Medium");
+const faker = require("faker");
+const _ = require("lodash");
+faker.seed(123);
 
 module.exports = async function(deployer) {
   const instance = await Medium.deployed();
-  instance.post("title 1", "body 1", "Ryan");
-  instance.post("title 2", "body 2", "Ryan");
-  instance.post("title 3", "body 3", "Ryan");
-  instance.post("title 4", "body 4", "Ryan");
-  instance.post("title 5", "body 5", "Ryan");
-  instance.post("title 6", "body 6", "Ryan");
-  instance.post("title 7", "body 7", "Ryan");
+  _.times(20, function() {
+    instance.post(faker.company.catchPhrase(), "body 1", "Ryan");
+  })
 };

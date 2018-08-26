@@ -4,9 +4,14 @@ const range = require("lodash").range;
 
 contract('Article', function(accounts) {
 
+  before(async function() {
+    const mediumContract = await Medium.deployed();
+    return Promise.all(range(5).map(i => mediumContract.post(`title ${i}`, `body ${i}`, "author 1")));
+  });
+
   it("has public getter methods", async function() {
     const mediumContract = await Medium.deployed();
-    const articleContract = await Article.at(await mediumContract.articleAddresses(0));
+    const articleContract = await Article.at(await mediumContract.articleAddressesByPoints(0));
     assert(typeof (await articleContract.title()), "string");
     assert(typeof (await articleContract.body()), "string");
     assert(typeof (await articleContract.authorName()), "string");
@@ -17,7 +22,7 @@ contract('Article', function(accounts) {
 
   it("permits article owners to patch", async function() {
     const mediumContract = await Medium.deployed();
-    const articleContract = await Article.at(await mediumContract.articleAddresses(0));
+    const articleContract = await Article.at(await mediumContract.articleAddressesByPoints(0));
     await articleContract.patch("new title", "new body", { from: (await articleContract.author()) });
     assert.equal("new title", (await articleContract.title()));
     assert.equal("new body", (await articleContract.body()));
@@ -25,7 +30,7 @@ contract('Article', function(accounts) {
 
   it("prohibits non-article owners from patching", async function() {
     const mediumContract = await Medium.deployed();
-    const articleContract = await Article.at(await mediumContract.articleAddresses(0));
+    const articleContract = await Article.at(await mediumContract.articleAddressesByPoints(0));
     const originalTitle = await articleContract.title();
     const originalBody = await articleContract.body();
     const otherAccount = accounts[0] === (await articleContract.author()) ? accounts[1] : accounts[0];
@@ -37,7 +42,7 @@ contract('Article', function(accounts) {
 
   it("permits upvotes from Medium", async function() {
     const mediumContract = await Medium.deployed();
-    const articleContract = await Article.at(await mediumContract.articleAddresses(0));
+    const articleContract = await Article.at(await mediumContract.articleAddressesByPoints(0));
     const originalPoints = (await articleContract.points()).toNumber();
     await mediumContract.upVote(0, { value: 10000000000000000 });
     assert.equal(originalPoints + 1, (await articleContract.points()).toNumber())
@@ -45,7 +50,7 @@ contract('Article', function(accounts) {
 
   it("prohibits upvotes that don't originate from Medium", async function() {
     const mediumContract = await Medium.deployed();
-    const articleContract = await Article.at(await mediumContract.articleAddresses(0));
+    const articleContract = await Article.at(await mediumContract.articleAddressesByPoints(0));
     try {
       await articleContract.upVote(1);
       assert(false, "article was manually upvoted")
@@ -55,10 +60,10 @@ contract('Article', function(accounts) {
 
   it("emits event when deleted", async function() {
     const mediumContract = await Medium.deployed();
-    const articleContract = await Article.at(await mediumContract.articleAddresses(0));
+    const articleContract = await Article.at(await mediumContract.articleAddressesByPoints(0));
     let eventEmitted = false;
     articleContract["deleted"]().watch(() => eventEmitted = true );
-    await articleContract.destroy({ from: (await articleContract.author()) });
+    await mediumContract.deleteArticle(await articleContract.id(), { from: await articleContract.author() });
     assert.equal(true, eventEmitted);
   });
 

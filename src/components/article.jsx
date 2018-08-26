@@ -55,7 +55,7 @@ class Article extends Component {
 
   handleDeleteArticleClick() {
     if(confirm("Are you sure you want to delete this Article?")) {
-      this.props.contracts.Article.destroy({ from: this.props.userAddress, gas: 1 000000 });
+      this.props.contracts.Medium.deleteArticle({ from: this.props.userAddress, gas: 500000 });
     }
   }
 

@@ -43,8 +43,8 @@ contract Article {
     points += _points;
 
   }
-  
-  function destroy() public authorOnly {
+
+  function destroy() public authorOnly mediumOnly {
     emit deleted(id);
     selfdestruct(author);
   }

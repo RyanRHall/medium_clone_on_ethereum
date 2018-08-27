@@ -22,7 +22,7 @@ module.exports = async function(callback) {
   console.log("Seeding...")
   const mediumContract = await Medium.deployed();
   for (let i = 0; i < 20; i++) {
-    console.log(`1/${i}`);
+    console.log(`${i}/20`);
     await mediumContract.post(faker.company.catchPhrase(), paragraphs(12), `${faker.name.firstName()} ${faker.name.lastName()}`, { from: _.sample(accounts) });
     await mediumContract.upVote(i, { value: faker.random.number(30) * 10000000000000000 });
   }

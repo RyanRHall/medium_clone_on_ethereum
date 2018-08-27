@@ -5,9 +5,10 @@ import { bindAll } from "lodash";
 import Header from "./components/header"
 
 // Styles
-import "./css/oswald.css"
-import "./css/open-sans.css"
-import "./css/pure-min.css"
+import "./css/index.css"
+import "./css/header.css"
+import "./css/article_list.css"
+import "./css/article.css"
 
 const defaultUserProfileState = {
   name: null,

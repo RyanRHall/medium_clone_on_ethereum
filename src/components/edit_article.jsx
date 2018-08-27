@@ -37,7 +37,7 @@ class NewArticle extends Component {
 
   // getters
   async getArticleFromId() {
-    const articleAddress = await this.props.contracts.Medium.articleAddresses(this.routeId());
+    const articleAddress = await this.props.contracts.Medium.getArticleFromId(this.routeId());
     this.props.connectContract("Article", {
       address: articleAddress,
       ready: this.getArticleProperties,

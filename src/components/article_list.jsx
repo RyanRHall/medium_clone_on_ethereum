@@ -15,16 +15,14 @@ class ArticleList extends Component {
   }
 
   async getArticleList() {
-    debugger
     const articleAddresses = await this.props.contracts.Medium.getArticleAddresses();
-    debugger
     this.setState({ articleAddresses });
   }
 
   render() {
     return(
       <main>
-        <h1>Medium</h1>
+        <h1>Articles</h1>
         {this.state.articleAddresses.map(address => <ArticleListItem key={address} address={address} />)}
       </main>
     )

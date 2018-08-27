@@ -36,6 +36,10 @@ contract Medium {
   }
 
   // FUNCTIONS
+  function getArticleFromId(uint id) public view returns(address) {
+    return articleAddressesByPoints[articleIdIndex[id]];
+  }
+
   function getNArticleAddresses(uint n) public view returns(address[]) {
     uint size = n > articleAddressesByPoints.length ? articleAddressesByPoints.length : n;
     address[] memory articleIds = new address[](size);
@@ -83,7 +87,7 @@ contract Medium {
     // pay author
     article.author().transfer(msg.value);
   }
-  
+
   function deleteArticle(uint id) public authorOnly(id) {
     // delete contract
     Article article = Article(articleAddressesByPoints[id]);

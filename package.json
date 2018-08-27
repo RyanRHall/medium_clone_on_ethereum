@@ -60,8 +60,8 @@
   "scripts": {
     "build": "node scripts/build.js",
     "reset": "scripts/reset.sh",
-    "seed": "node scripts/seed.js",
     "start": "node scripts/start.js",
+    "seed": "truffle exec scripts/seed.js",
     "test": "node scripts/test.js --env=jsdom"
   },
   "jest": {

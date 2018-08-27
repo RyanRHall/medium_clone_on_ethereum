@@ -1,0 +1,24 @@
+.article-list-item {
+  padding: 8px 15px;
+  background-color: #fefefe;
+  box-shadow: 2px 2px 2px #cccccc;
+  border: 1px solid black;
+  border-radius: 10px;
+  width: 70vw;
+  margin: 0 auto 15px auto;
+  font-size: 140%;
+  cursor: pointer;
+}
+
+.article-list-item:hover {
+  border-width: 2px;
+  padding: 7px 14px;
+}
+
+.article-list-item-points {
+  font-family: 'Cedarville Cursive', cursive;
+  font-weight: bold;
+  color: green;
+  display: inline-block;
+  margin-right: 15px;
+}

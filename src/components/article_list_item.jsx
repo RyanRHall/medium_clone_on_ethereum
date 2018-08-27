@@ -8,7 +8,7 @@ class Article extends Component {
     super(props);
     bindAll(this, ["getArticleProperties", "handleClick"])
     this.state = {
-      title: null,
+      title: "...",
       points: null,
       id: null
     };
@@ -30,8 +30,8 @@ class Article extends Component {
   render() {
     return(
       <div className="article-list-item" onClick={this.handleClick}>
-        <span>{this.state.points}</span>
-        <span>{this.state.title}</span>
+        <span className="article-list-item-points">{this.state.points}</span>
+        <span className="article-list-item-title">{this.state.title}</span>
       </div>
     )
   }

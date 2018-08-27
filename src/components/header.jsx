@@ -7,7 +7,7 @@ import { bindAll } from "lodash";
 class Header extends Component {
   constructor(props) {
     super(props);
-    bindAll(this, ["handleLogInClick", "handleLogOutClick", "handleNewArticleClick"]);
+    bindAll(this, ["handleLogInClick", "handleLogOutClick", "handleNewArticleClick", "handleLogoClick"]);
   }
 
   // helpers
@@ -29,6 +29,10 @@ class Header extends Component {
     browserHistory.push("/articles/new");
   }
 
+  handleLogoClick() {
+    browserHistory.push("/");
+  }
+
   // rendering
   logInButton() {
     return(
@@ -42,7 +46,7 @@ class Header extends Component {
         <img src={this.props.userProfile.avatar} alt="avatar"/>
         <span>{this.props.userProfile.name}</span>
         <div id="user-icon-dropdown">
-          <div onClick={this.handleLogOutClick}>Log Out</div>
+          <div onClick={this.handleLogOutClick} id="log-out-button">Log Out</div>
         </div>
       </div>
     )
@@ -50,14 +54,17 @@ class Header extends Component {
 
   newArticleButton() {
     return(
-      <div id="new-article-button" onClick={this.handleNewArticleClick} key="new-article-button">Publish New Article</div>
+      <div id="new-article-button" onClick={this.handleNewArticleClick} key="new-article-button"><span>+</span>Publish New Article</div>
     )
   }
 
   render() {
     return(
       <header>
-        {this.loggedIn() ? [this.newArticleButton(), this.userIcon()] : this.logInButton() }
+        <div id="logo" onClick={this.handleLogoClick}>M</div>
+        <div id="header-nav-link-container">
+          {this.loggedIn() ? [this.newArticleButton(), this.userIcon()] : this.logInButton() }
+        </div>
       </header>
     )
   }

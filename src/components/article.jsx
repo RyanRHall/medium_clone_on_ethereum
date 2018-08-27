@@ -10,7 +10,7 @@ class Article extends Component {
     super(props);
     bindAll(this, ["getArticleFromId", "getArticleProperties", "handleUpVoteChange", "handleSupportClick", "handleDeleteArticleClick", "handleEditArticleClick", "handleRedirectOnDelete"])
     this.state = {
-      title: null,
+      title: "...",
       body: null,
       authorName: null,
       author : null,
@@ -28,7 +28,7 @@ class Article extends Component {
   // getters
   async getArticleFromId() {
     const id = parseInt(this.props.routeParams.id, 10);
-    const articleAddress = await this.props.contracts.Medium.articleAddresses(id);
+    const articleAddress = await this.props.contracts.Medium.getArticleFromId(id);
     this.props.connectContract("Article", {
       address: articleAddress,
       ready: this.getArticleProperties,
@@ -55,7 +55,8 @@ class Article extends Component {
 
   handleDeleteArticleClick() {
     if(confirm("Are you sure you want to delete this Article?")) {
-      this.props.contracts.Medium.deleteArticle({ from: this.props.userAddress, gas: 500000 });
+      const id = parseInt(this.props.routeParams.id, 10);
+      this.props.contracts.Medium.deleteArticle(id, { from: this.props.userAddress, gas: 1000000 });
     }
   }
 
@@ -63,9 +64,12 @@ class Article extends Component {
     browserHistory.push(`/articles/${this.props.routeParams.id}/edit`)
   }
 
-  handleSupportClick(event) {
+  async handleSupportClick(event) {
     const id = parseInt(this.props.routeParams.id, 10);
-    this.props.contracts.Medium.upVote(id, { from: this.props.userAddress, value: `${this.state.upVote * 10000000000000000}` });
+    await this.props.contracts.Medium.upVote(id, { from: this.props.userAddress, value: `${this.state.upVote * 10000000000000000}` });
+    this.setState({
+      points: "..."
+    })
   }
 
   handleRedirectOnDelete(_, properties) {
@@ -86,9 +90,12 @@ class Article extends Component {
 
   renderUpVote() {
     return [
-      <div key="1">{this.state.points}</div>,
-      <select key="2" value={this.state.upVote} onChange={this.handleUpVoteChange}>{selectOptions}</select>,
-      <div key="3" id="support-article-button" onClick={this.handleSupportClick}>Support!</div>
+      <div key="0" id="by-label">{this.state.authorName ? `by: ${this.state.authorName}` : null}</div>,
+      <div key="1" id="article-points">{this.state.points} points</div>,
+      <div key="2" id="article-upvote-tool" onClick={this.handleSupportClick}>
+        <select key="1" value={this.state.upVote} onChange={this.handleUpVoteChange} onClick={e => e.stopPropagation()}>{selectOptions}</select>
+        <div key="2">Support!</div>
+      </div>
     ]
   }
 
@@ -107,9 +114,8 @@ class Article extends Component {
   render() {
     return(
       <main>
-        <nav>{this.renderNav()}</nav>
         <h1>{this.state.title}</h1>
-        <h4>by {this.state.authorName}</h4>
+        <nav>{this.renderNav()}</nav>
         <div id="article-body">{this.state.body}</div>
       </main>
     )

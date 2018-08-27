@@ -1,14 +1,12 @@
-let Web3 = require('web3');
-let contract = require('truffle-contract');
-let Medium = contract(require('../build/contracts/Medium.json'));
+const faker = require("faker");
+const _ = require("lodash");
+const Medium = artifacts.require("Medium");
+faker.seed(123);
 
-var provider = new Web3.providers.HttpProvider("http://localhost:8545");
-Medium.setProvider(provider);
-const web3 = new Web3(provider);
-const account = web3.eth.accounts[0];
-Medium.deployed().then(contract => {
-   // contract.post(faker.company.catchPhrase(), "body 1", "Ryan");
-   contract.post("title", "body 1", "Ryan", { from: account } )
-    .then(msg => console.log("success:", msg))
-    .catch(err => console.log("error:", err));
-});
+module.exports = async function(callback) {
+  const mediumContract = await Medium.deployed();
+  _.times(20, () => {
+    mediumContract.post(faker.company.catchPhrase(), faker.lorem.paragraphs(12), `${faker.name.firstName()} ${faker.name.lastName()}`);
+  })
+  callback();
+}

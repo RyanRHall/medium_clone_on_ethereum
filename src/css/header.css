@@ -1,0 +1,97 @@
+header {
+  background-color: #dddddd;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 120%;
+  padding: 0 40px;
+}
+
+#logo {
+  font-size: 200%;
+  font-family: 'Cedarville Cursive', cursive;
+  color: green;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform .2s;
+}
+
+#logo:hover {
+  transform: rotate(-10deg);
+}
+
+#header-nav-link-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#new-article-button{
+  margin-right: 30px;
+  cursor: pointer;
+  padding: 8px 20px;
+  border-radius: 20px;
+  background-color: #fefefe;
+  border: 1px solid black;
+  box-shadow: 2px 2px 2px #cccccc;
+}
+
+#new-article-button:hover {
+  border-width: 2px;
+  padding: 7px 19px;
+}
+
+#new-article-button span {
+  color: green;
+  display: inline-block;
+  font-weight: bold;
+  margin-right: 10px;
+  transition: transform .2s;
+}
+
+#new-article-button:hover span {
+  transform: rotate(-90deg);
+}
+
+#user-icon {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  cursor: default;
+  padding: 15px 0;
+}
+
+#user-icon img {
+  height: 5vh;
+  margin-right: 10px;
+  border-radius: 40%;
+}
+
+#user-icon:hover #user-icon-dropdown {
+  display: block;
+}
+
+#user-icon-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  cursor: pointer;
+}
+
+#log-out-button {
+  border: 1px solid black;
+  width: 6vw;
+  border-radius: 20px;
+  background-color: #fefefe;
+  padding: 8px 20px;
+  text-align: center;
+  box-shadow: 2px 2px 2px #cccccc;
+}
+
+#log-out-button:hover {
+  border-width: 2px;
+  padding: 7px 19px;
+}

@@ -29,6 +29,12 @@ contract Medium {
     require(article.author() == msg.sender);
     _;
   }
+  // require author or admin owner
+  modifier authorOrAdminOnly(uint id) {
+    Article article = Article(getArticleFromId(id));
+    require(admins[msg.sender] || article.author() == msg.sender);
+    _;
+  }
 
   // CONSTRUCTOR
   constructor() public {
@@ -90,7 +96,7 @@ contract Medium {
     article.author().transfer(msg.value);
   }
 
-  function deleteArticle(uint id) public authorOnly(id) {
+  function deleteArticle(uint id) public authorOrAdminOnly(id) {
     // delete contract
     Article article = Article(getArticleFromId(id));
     article.destroy();

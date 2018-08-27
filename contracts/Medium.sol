@@ -78,7 +78,9 @@ contract Medium {
       leftArticle = Article(articleAddressesByPoints[idx - 1]);
       rightArticle = Article(articleAddressesByPoints[idx]);
       if(rightArticle.points() > leftArticle.points()) {
-        (articleAddressesByPoints[idx], articleAddressesByPoints[idx - 1]) = (articleAddressesByPoints[idx - 1], articleAddressesByPoints[idx]);
+        (articleAddressesByPoints[idx], articleAddressesByPoints[idx - 1]) = (leftArticle, rightArticle);
+        articleIdIndex[leftArticle.id()] = idx;
+        articleIdIndex[rightArticle.id()] = idx - 1;
         idx--;
       } else {
         break;

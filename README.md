@@ -25,6 +25,6 @@ This repository contains my final project for ConsenSys's 2018 developer academy
 
 ## Links
 
-[Avoiding Common Attacks]("./avoiding_common_attacks.md")
-[Design Pattern Decisions]("./design_pattern_desicions.md")
-[Tests]("./tests.md")
+[Avoiding Common Attacks](avoiding_common_attacks.md)
+[Design Pattern Decisions](design_pattern_desicions.md)
+[Tests](tests.md)

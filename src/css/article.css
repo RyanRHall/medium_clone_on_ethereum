@@ -3,6 +3,7 @@ nav {
   display: flex;
   flex-direction: row;
   align-items: center;
+  margin-bottom: 20px;
 }
 
 #article-points {
@@ -32,7 +33,6 @@ nav {
 
 #article-upvote-tool select {
   display: inline-block;
-  /* height: 40%; */
   margin-right: 15px;
 }
 
@@ -42,4 +42,23 @@ nav > * {
 
 #by-label {
   font-weight: bold;
+}
+
+#article-body {
+  font-size: 120%;
+}
+
+#delete-article-button, #edit-article-button {
+  border: 1px solid black;
+  background-color: #fefefe;
+  box-shadow: 2px 2px 2px #cccccc;
+  height: 25px;
+  padding: 8px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+#delete-article-button:hover, #edit-article-button:hover {
+  border-width: 2px;
+  padding: 7px 19px;
 }

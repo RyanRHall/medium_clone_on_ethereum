@@ -1,6 +1,7 @@
 pragma solidity ^0.4.24;
 
 contract Article {
+  // CONTRACT VARIABLES
   string  public title;
   string  public body;
   string  public authorName;
@@ -9,19 +10,15 @@ contract Article {
   address public author;
   address private mediumAddress;
 
+  // EVENTS
   event updated(uint id);
   event deleted(uint id);
 
-  modifier mediumOnly() {
-    require(msg.sender == mediumAddress);
-    _;
-  }
+  // MODIFIERS
+  modifier mediumOnly() { require(msg.sender == mediumAddress); _; }
+  modifier authorOnly() { require(tx.origin == author); _; }
 
-  modifier authorOnly() {
-    require(tx.origin == author);
-    _;
-  }
-
+  // CONSTRUCTOR
   constructor(string _title, string _body, string _authorName, uint _id) public {
     title = _title;
     body = _body;
@@ -32,6 +29,7 @@ contract Article {
     mediumAddress = msg.sender;
   }
 
+  // FUNCTIONS
   function patch(string _title, string _body) public authorOnly {
     title = _title;
     body = _body;
@@ -41,7 +39,6 @@ contract Article {
   function upVote(uint _points) public mediumOnly {
     emit updated(id);
     points += _points;
-
   }
 
   function destroy() public authorOnly mediumOnly {

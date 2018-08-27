@@ -9,6 +9,7 @@ import "./css/index.css"
 import "./css/header.css"
 import "./css/article_list.css"
 import "./css/article.css"
+import "./css/edit_article.css"
 
 const defaultUserProfileState = {
   name: null,
@@ -68,13 +69,22 @@ class App extends Component {
     return !this.state.userAddress || !this.state.web3
   }
 
+  renderLoading() {
+    return(
+      <main>
+        <h1>Loading...</h1>
+        <p>Currently trying to connect to web3 and find your user account. You may need to log in or switch to a web3-enabled browser!</p>
+      </main>
+    )
+  }
+
   render() {
     return(
       <userAddress.Provider value={this.state.userAddress}>
         <userProfile.Provider value={this.profileContext()}>
           <div className="App">
             <Header />
-            {this.loading() ? "Loading" : this.props.children}
+            {this.loading() ? this.renderLoading() : this.props.children}
           </div>
         </userProfile.Provider>
       </userAddress.Provider>

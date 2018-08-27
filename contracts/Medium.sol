@@ -25,7 +25,7 @@ contract Medium {
   modifier adminOnly { require(admins[msg.sender]); _; }
   // require article owner
   modifier authorOnly(uint id) {
-    Article article = Article(articleAddressesByPoints[id]);
+    Article article = Article(getArticleFromId(id));
     require(article.author() == msg.sender);
     _;
   }
@@ -68,7 +68,7 @@ contract Medium {
   function upVote(uint id) public payable stopInEmergency {
     // calculate article points based on price
     uint points = msg.value / 10000000000000000;
-    Article article = Article(articleAddressesByPoints[id]);
+    Article article = Article(getArticleFromId(id));
     article.upVote(points);
     // rearrange articleAddressesByPoints
     uint idx = articleIdIndex[id];
@@ -90,7 +90,7 @@ contract Medium {
 
   function deleteArticle(uint id) public authorOnly(id) {
     // delete contract
-    Article article = Article(articleAddressesByPoints[id]);
+    Article article = Article(getArticleFromId(id));
     article.destroy();
     // remove contract from id list
     delete articleAddressesByPoints[articleIdIndex[id]];

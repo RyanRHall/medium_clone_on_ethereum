@@ -1,0 +1,39 @@
+#edit-article div{
+  font-size: 140%;
+}
+
+.row{
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 40px;
+  justify-content: center;
+}
+
+.row label {
+  display: inline-block;
+  width: 200px;
+  /* flex-grow: 1; */
+}
+
+.row input, .row textarea {
+  flex-grow: 1;
+  padding: 3px;
+  border: 1px solid grey;
+  margin: 0;
+}
+
+.row input {
+  font-size: 24px;
+  font-family: sans-serif;
+}
+
+.row textarea {
+  height: 40vh;
+  font-size: 20px;
+  font-family: sans-serif;
+}
+
+.row button {
+  font-size: 150%;
+  cursor: pointer;
+}

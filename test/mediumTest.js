@@ -36,7 +36,7 @@ contract('Medium', function(accounts) {
   it("deletes articles", async function() {
     const mediumContract = await Medium.deployed();
     const initialArticleCount = (await mediumContract.getArticleAddresses()).length;
-    const articleAddressToDelete = await mediumContract.articleAddressesByPoints(await mediumContract.articleIdIndex(2));
+    const articleAddressToDelete = await mediumContract.getArticleFromId(2);
     await mediumContract.deleteArticle(2);
     assert.equal(initialArticleCount - 1, (await mediumContract.getArticleAddresses()).length);
     const articleAddresses = await mediumContract.getArticleAddresses();

@@ -9,7 +9,8 @@ class NewArticle extends Component {
     bindAll(this, ["handleSubmit", "redirectToNewArticle", "getArticleFromId", "getArticleProperties", "redirectFromUpdate"]);
     this.state = {
       title: "",
-      body: ""
+      body: "",
+      loading: false
     };
     if(this.isNewMode()) {
       props.connectContract("Medium", { watch: { posted: this.redirectToNewArticle } });
@@ -58,15 +59,17 @@ class NewArticle extends Component {
     }
   }
 
-  handleSubmit() {
+  async handleSubmit() {
     if(this.isNewMode()) {
       if(this.isLoggedIn()) {
-        this.props.contracts.Medium.post(this.state.title, this.state.body, this.props.userProfile.name, { from: this.props.userAddress });
+        await this.props.contracts.Medium.post(this.state.title, this.state.body, this.props.userProfile.name, { from: this.props.userAddress });
+        this.setState({ loading: true });
       } else {
         alert("You must be logged in to post!");
       }
     } else {
-      this.props.contracts.Article.patch(this.state.title, this.state.body, { from: this.props.userAddress });
+      await this.props.contracts.Article.patch(this.state.title, this.state.body, { from: this.props.userAddress });
+      this.setState({ loading: true });
     }
   }
 
@@ -78,9 +81,10 @@ class NewArticle extends Component {
   }
 
   redirectToNewArticle(_, properties) {
-    // TODO - make sure this only redirects for article created by current user
-    const id = properties.args.articleId.toNumber();
-    browserHistory.push(`/articles/${id}`);
+    if(properties.args.author === this.props.userAddress) {
+      const id = properties.args.articleId.toNumber();
+      browserHistory.push(`/articles/${id}`);
+    }
   }
 
   // renderers
@@ -94,13 +98,19 @@ class NewArticle extends Component {
 
   render() {
     return(
-      <main>
+      <main id="edit-article">
         <h1>{this.renderHeader()}</h1>
-        <label>Title</label>
-        <input onChange={this.handleChange("title")} value={this.state.title}/>
-        <label>Body</label>
-        <textarea onChange={this.handleChange("body")} value={this.state.body}/>
-        <button onClick={this.handleSubmit}>{this.renderSubmitButtonText()}</button>
+        <div className="row">
+          <label>Title:</label>
+          <input onChange={this.handleChange("title")} value={this.state.title} disabled={this.state.loading}/>
+        </div>
+        <div className="row">
+          <label>Body:</label>
+          <textarea onChange={this.handleChange("body")} value={this.state.body} disabled={this.state.loading}/>
+        </div>
+        <div className="row">
+          <button onClick={this.handleSubmit} disabled={this.state.loading}>{this.renderSubmitButtonText()}</button>
+        </div>
       </main>
     )
   }

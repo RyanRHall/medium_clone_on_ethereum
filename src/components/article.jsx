@@ -45,6 +45,7 @@ class Article extends Component {
     const authorName = await this.props.contracts.Article.authorName();
     const points = (await this.props.contracts.Article.points()).toNumber();
     const author = await this.props.contracts.Article.author();
+    const id = await this.props.contracts.Article.id();
     this.setState({ title, body, authorName, points, author });
   }
 
@@ -116,7 +117,7 @@ class Article extends Component {
       <main>
         <h1>{this.state.title}</h1>
         <nav>{this.renderNav()}</nav>
-        <div id="article-body">{this.state.body}</div>
+        <div id="article-body" dangerouslySetInnerHTML={{__html: this.state.body}}></div>
       </main>
     )
   }
